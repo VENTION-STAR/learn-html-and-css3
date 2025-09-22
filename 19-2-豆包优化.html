@@ -1,0 +1,630 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>注册信息</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link href="https://cdn.jsdelivr.net/npm/font-awesome@4.7.0/css/font-awesome.min.css" rel="stylesheet">
+    
+    <!-- 配置Tailwind自定义颜色和字体 -->
+    <script>
+        tailwind.config = {
+            theme: {
+                extend: {
+                    colors: {
+                        primary: '#3B82F6',
+                        secondary: '#10B981',
+                        neutral: '#64748B',
+                        light: '#F1F5F9',
+                        dark: '#1E293B'
+                    },
+                    fontFamily: {
+                        inter: ['Inter', 'system-ui', 'sans-serif'],
+                    },
+                }
+            }
+        }
+    </script>
+    
+    <style type="text/tailwindcss">
+        @layer utilities {
+            .content-auto {
+                content-visibility: auto;
+            }
+            .form-input-focus {
+                @apply focus:border-primary focus:ring-2 focus:ring-primary/20 focus:outline-none;
+            }
+            .section-transition {
+                @apply transition-all duration-300 ease-in-out;
+            }
+            .btn-hover {
+                @apply hover:shadow-lg transform hover:-translate-y-0.5 transition-all duration-200;
+            }
+        }
+    </style>
+</head>
+<body class="bg-gradient-to-br from-blue-50 to-indigo-100 min-h-screen font-inter text-dark">
+    <div class="container mx-auto px-4 py-12 max-w-4xl">
+        <!-- 页面标题 -->
+        <div class="text-center mb-10">
+            <h1 class="text-[clamp(1.8rem,4vw,2.5rem)] font-bold text-dark mb-2">
+                <i class="fa fa-user-plus text-primary mr-2"></i>创建新账户
+            </h1>
+            <p class="text-neutral">请填写以下信息完成注册</p>
+        </div>
+        
+        <!-- 表单卡片 -->
+        <div class="bg-white rounded-2xl shadow-xl overflow-hidden">
+            <form id="registrationForm" class="p-6 md:p-8">
+                <!-- 进度指示器 -->
+                <div class="flex items-center justify-between mb-10 relative">
+                    <div class="absolute top-1/2 left-0 right-0 h-1 bg-gray-200 -translate-y-1/2 z-0"></div>
+                    <div id="progressBar" class="absolute top-1/2 left-0 h-1 bg-primary -translate-y-1/2 z-10 transition-all duration-500" style="width: 33%"></div>
+                    
+                    <div class="flex flex-col items-center relative z-20">
+                        <div class="w-10 h-10 rounded-full bg-primary text-white flex items-center justify-center font-bold mb-2">1</div>
+                        <span class="text-sm font-medium text-primary">个人信息</span>
+                    </div>
+                    
+                    <div class="flex flex-col items-center relative z-20">
+                        <div id="eduIndicator" class="w-10 h-10 rounded-full bg-gray-200 text-gray-500 flex items-center justify-center font-bold mb-2 transition-all duration-300">2</div>
+                        <span class="text-sm font-medium text-gray-500 transition-all duration-300">教育经历</span>
+                    </div>
+                    
+                    <div class="flex flex-col items-center relative z-20">
+                        <div id="workIndicator" class="w-10 h-10 rounded-full bg-gray-200 text-gray-500 flex items-center justify-center font-bold mb-2 transition-all duration-300">3</div>
+                        <span class="text-sm font-medium text-gray-500 transition-all duration-300">工作经历</span>
+                    </div>
+                </div>
+                
+                <!-- 个人信息部分 -->
+                <section id="personalInfo" class="mb-8">
+                    <h2 class="text-xl font-bold mb-6 flex items-center">
+                        <i class="fa fa-user-circle text-primary mr-2"></i>个人信息
+                    </h2>
+                    
+                    <div class="grid grid-cols-1 md:grid-cols-2 gap-5">
+                        <div class="space-y-2">
+                            <label for="fullname" class="block text-sm font-medium text-gray-700">姓名 <span class="text-red-500">*</span></label>
+                            <div class="relative">
+                                <span class="absolute inset-y-0 left-0 flex items-center pl-3 text-gray-500">
+                                    <i class="fa fa-user"></i>
+                                </span>
+                                <input type="text" id="fullname" placeholder="请输入真实姓名" 
+                                    class="w-full pl-10 pr-4 py-2.5 border border-gray-300 rounded-lg form-input-focus"
+                                    required>
+                                <div class="hidden error-message text-red-500 text-sm mt-1">
+                                    <i class="fa fa-exclamation-circle mr-1"></i>请输入您的真实姓名
+                                </div>
+                            </div>
+                        </div>
+                        
+                        <div class="space-y-2">
+                            <label for="password" class="block text-sm font-medium text-gray-700">密码 <span class="text-red-500">*</span></label>
+                            <div class="relative">
+                                <span class="absolute inset-y-0 left-0 flex items-center pl-3 text-gray-500">
+                                    <i class="fa fa-lock"></i>
+                                </span>
+                                <input type="password" id="password" placeholder="请输入密码" 
+                                    class="w-full pl-10 pr-10 py-2.5 border border-gray-300 rounded-lg form-input-focus"
+                                    minlength="6" required>
+                                <button type="button" class="toggle-password absolute inset-y-0 right-0 flex items-center pr-3 text-gray-500 hover:text-primary" data-target="password">
+                                    <i class="fa fa-eye-slash"></i>
+                                </button>
+                                <div class="hidden error-message text-red-500 text-sm mt-1">
+                                    <i class="fa fa-exclamation-circle mr-1"></i>密码至少需要6个字符
+                                </div>
+                            </div>
+                        </div>
+                        
+                        <div class="space-y-2 md:col-span-2">
+                            <label for="confirmPassword" class="block text-sm font-medium text-gray-700">确认密码 <span class="text-red-500">*</span></label>
+                            <div class="relative">
+                                <span class="absolute inset-y-0 left-0 flex items-center pl-3 text-gray-500">
+                                    <i class="fa fa-lock"></i>
+                                </span>
+                                <input type="password" id="confirmPassword" placeholder="请确认密码" 
+                                    class="w-full pl-10 pr-10 py-2.5 border border-gray-300 rounded-lg form-input-focus"
+                                    required>
+                                <button type="button" class="toggle-password absolute inset-y-0 right-0 flex items-center pr-3 text-gray-500 hover:text-primary" data-target="confirmPassword">
+                                    <i class="fa fa-eye-slash"></i>
+                                </button>
+                                <div class="hidden error-message text-red-500 text-sm mt-1">
+                                    <i class="fa fa-exclamation-circle mr-1"></i>两次输入的密码不一致
+                                </div>
+                            </div>
+                        </div>
+                        
+                        <div class="space-y-2 md:col-span-2">
+                            <label class="block text-sm font-medium text-gray-700">性别</label>
+                            <div class="flex space-x-6 pt-2">
+                                <label class="inline-flex items-center cursor-pointer">
+                                    <input type="radio" name="gender" value="male" checked 
+                                        class="w-4 h-4 text-primary border-gray-300 focus:ring-primary">
+                                    <span class="ml-2 text-gray-700">男</span>
+                                </label>
+                                <label class="inline-flex items-center cursor-pointer">
+                                    <input type="radio" name="gender" value="female" 
+                                        class="w-4 h-4 text-primary border-gray-300 focus:ring-primary">
+                                    <span class="ml-2 text-gray-700">女</span>
+                                </label>
+                            </div>
+                        </div>
+                    </div>
+                </section>
+                
+                <!-- 教育经历部分 -->
+                <section id="educationInfo" class="mb-8 hidden">
+                    <h2 class="text-xl font-bold mb-6 flex items-center">
+                        <i class="fa fa-graduation-cap text-primary mr-2"></i>教育经历
+                    </h2>
+                    
+                    <div class="grid grid-cols-1 md:grid-cols-2 gap-5">
+                        <div class="space-y-2">
+                            <label for="educationLevel" class="block text-sm font-medium text-gray-700">最高学历 <span class="text-red-500">*</span></label>
+                            <div class="relative">
+                                <span class="absolute inset-y-0 left-0 flex items-center pl-3 text-gray-500">
+                                    <i class="fa fa-graduation-cap"></i>
+                                </span>
+                                <select id="educationLevel" 
+                                    class="w-full pl-10 pr-4 py-2.5 border border-gray-300 rounded-lg form-input-focus appearance-none bg-white"
+                                    required>
+                                    <option value="" disabled selected>请选择学历</option>
+                                    <option value="primary">小学</option>
+                                    <option value="high">高中</option>
+                                    <option value="college">大专</option>
+                                    <option value="bachelor">本科</option>
+                                    <option value="master">研究生</option>
+                                    <option value="phd">博士生</option>
+                                </select>
+                                <span class="absolute inset-y-0 right-0 flex items-center pr-3 text-gray-500 pointer-events-none">
+                                    <i class="fa fa-chevron-down text-xs"></i>
+                                </span>
+                            </div>
+                        </div>
+                        
+                        <div class="space-y-2">
+                            <label for="schoolName" class="block text-sm font-medium text-gray-700">学校名称 <span class="text-red-500">*</span></label>
+                            <div class="relative">
+                                <span class="absolute inset-y-0 left-0 flex items-center pl-3 text-gray-500">
+                                    <i class="fa fa-university"></i>
+                                </span>
+                                <input type="text" id="schoolName" placeholder="请输入学校名称" 
+                                    class="w-full pl-10 pr-4 py-2.5 border border-gray-300 rounded-lg form-input-focus"
+                                    required>
+                            </div>
+                        </div>
+                        
+                        <div class="space-y-2">
+                            <label for="major" class="block text-sm font-medium text-gray-700">所学专业 <span class="text-red-500">*</span></label>
+                            <div class="relative">
+                                <span class="absolute inset-y-0 left-0 flex items-center pl-3 text-gray-500">
+                                    <i class="fa fa-book"></i>
+                                </span>
+                                <input type="text" id="major" placeholder="请输入所学专业" 
+                                    class="w-full pl-10 pr-4 py-2.5 border border-gray-300 rounded-lg form-input-focus"
+                                    required>
+                            </div>
+                        </div>
+                        
+                        <div class="space-y-2">
+                            <label class="block text-sm font-medium text-gray-700">在校时间 <span class="text-red-500">*</span></label>
+                            <div class="flex space-x-2">
+                                <div class="relative flex-1">
+                                    <select id="startYear" 
+                                        class="w-full pl-3 pr-8 py-2.5 border border-gray-300 rounded-lg form-input-focus appearance-none bg-white"
+                                        required>
+                                        <option value="" disabled selected>开始年份</option>
+                                        <option value="2015">2015</option>
+                                        <option value="2016">2016</option>
+                                        <option value="2017">2017</option>
+                                        <option value="2018">2018</option>
+                                        <option value="2019">2019</option>
+                                        <option value="2020">2020</option>
+                                        <option value="2021">2021</option>
+                                    </select>
+                                    <span class="absolute inset-y-0 right-0 flex items-center pr-3 text-gray-500 pointer-events-none">
+                                        <i class="fa fa-chevron-down text-xs"></i>
+                                    </span>
+                                </div>
+                                <span class="flex items-center text-gray-500">-</span>
+                                <div class="relative flex-1">
+                                    <select id="endYear" 
+                                        class="w-full pl-3 pr-8 py-2.5 border border-gray-300 rounded-lg form-input-focus appearance-none bg-white"
+                                        required>
+                                        <option value="" disabled selected>结束年份</option>
+                                        <option value="2019">2019</option>
+                                        <option value="2020">2020</option>
+                                        <option value="2021">2021</option>
+                                        <option value="2022">2022</option>
+                                        <option value="2023">2023</option>
+                                        <option value="2024">2024</option>
+                                        <option value="2025">2025</option>
+                                    </select>
+                                    <span class="absolute inset-y-0 right-0 flex items-center pr-3 text-gray-500 pointer-events-none">
+                                        <i class="fa fa-chevron-down text-xs"></i>
+                                    </span>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </section>
+                
+                <!-- 工作经历部分 -->
+                <section id="workInfo" class="mb-8 hidden">
+                    <h2 class="text-xl font-bold mb-6 flex items-center">
+                        <i class="fa fa-briefcase text-primary mr-2"></i>工作经历
+                    </h2>
+                    
+                    <div class="grid grid-cols-1 gap-5">
+                        <div class="space-y-2">
+                            <label for="companyName" class="block text-sm font-medium text-gray-700">公司名称</label>
+                            <div class="relative">
+                                <span class="absolute inset-y-0 left-0 flex items-center pl-3 text-gray-500">
+                                    <i class="fa fa-building"></i>
+                                </span>
+                                <input type="text" id="companyName" placeholder="请输入公司名称（如无工作经历可留空）" 
+                                    class="w-full pl-10 pr-4 py-2.5 border border-gray-300 rounded-lg form-input-focus">
+                            </div>
+                        </div>
+                        
+                        <div class="space-y-2">
+                            <label for="workExperience" class="block text-sm font-medium text-gray-700">工作描述</label>
+                            <div class="relative">
+                                <span class="absolute top-3 left-3 text-gray-500">
+                                    <i class="fa fa-file-text-o"></i>
+                                </span>
+                                <textarea id="workExperience" placeholder="请描述您的工作经历（如无工作经历可留空）" 
+                                    class="w-full pl-10 pr-4 py-2.5 border border-gray-300 rounded-lg form-input-focus min-h-[100px] resize-y"></textarea>
+                            </div>
+                        </div>
+                    </div>
+                </section>
+                
+                <!-- 协议和按钮 -->
+                <div id="agreementSection" class="mt-8 pt-6 border-t border-gray-200">
+                    <div class="mb-6">
+                        <label class="inline-flex items-start cursor-pointer">
+                            <input type="checkbox" id="agreement" class="mt-1 w-4 h-4 text-primary border-gray-300 focus:ring-primary" required>
+                            <span class="ml-2 text-gray-700 text-sm">
+                                已阅读并同意<a href="#" class="text-primary hover:underline">《用户服务协议》</a>和<a href="#" class="text-primary hover:underline">《隐私政策》</a>
+                            </span>
+                        </label>
+                        <div class="hidden error-message text-red-500 text-sm mt-1">
+                            <i class="fa fa-exclamation-circle mr-1"></i>请阅读并同意相关协议
+                        </div>
+                    </div>
+                    
+                    <div class="flex flex-wrap gap-4 justify-between">
+                        <button type="button" id="prevBtn" class="hidden px-6 py-2.5 bg-gray-200 text-gray-700 rounded-lg font-medium btn-hover">
+                            <i class="fa fa-arrow-left mr-1"></i> 上一步
+                        </button>
+                        
+                        <div class="ml-auto">
+                            <button type="reset" class="px-6 py-2.5 bg-gray-200 text-gray-700 rounded-lg font-medium btn-hover mr-3">
+                                <i class="fa fa-refresh mr-1"></i> 重新填写
+                            </button>
+                            <button type="button" id="nextBtn" class="px-6 py-2.5 bg-primary text-white rounded-lg font-medium btn-hover">
+                                下一步 <i class="fa fa-arrow-right ml-1"></i>
+                            </button>
+                            <button type="submit" id="submitBtn" class="hidden px-8 py-2.5 bg-secondary text-white rounded-lg font-medium btn-hover">
+                                <i class="fa fa-check mr-1"></i> 免费注册
+                            </button>
+                        </div>
+                    </div>
+                </div>
+            </form>
+        </div>
+        
+        <!-- 注册成功弹窗 -->
+        <div id="successModal" class="fixed inset-0 bg-black/50 flex items-center justify-center z-50 hidden">
+            <div class="bg-white rounded-xl p-8 max-w-md w-full mx-4 transform transition-all duration-300 scale-95 opacity-0" id="modalContent">
+                <div class="text-center">
+                    <div class="w-16 h-16 bg-green-100 rounded-full flex items-center justify-center mx-auto mb-4">
+                        <i class="fa fa-check text-2xl text-secondary"></i>
+                    </div>
+                    <h3 class="text-xl font-bold mb-2">注册成功！</h3>
+                    <p class="text-gray-600 mb-6">您的账户已成功创建，即将跳转到登录页面</p>
+                    <button id="closeModal" class="px-6 py-2.5 bg-primary text-white rounded-lg font-medium btn-hover">
+                        确定
+                    </button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        // 获取DOM元素
+        const personalInfo = document.getElementById('personalInfo');
+        const educationInfo = document.getElementById('educationInfo');
+        const workInfo = document.getElementById('workInfo');
+        const nextBtn = document.getElementById('nextBtn');
+        const prevBtn = document.getElementById('prevBtn');
+        const submitBtn = document.getElementById('submitBtn');
+        const progressBar = document.getElementById('progressBar');
+        const eduIndicator = document.getElementById('eduIndicator');
+        const workIndicator = document.getElementById('workIndicator');
+        const registrationForm = document.getElementById('registrationForm');
+        const successModal = document.getElementById('successModal');
+        const modalContent = document.getElementById('modalContent');
+        const closeModal = document.getElementById('closeModal');
+        const togglePasswordBtns = document.querySelectorAll('.toggle-password');
+        
+        // 当前步骤
+        let currentStep = 1;
+        const totalSteps = 3;
+        
+        // 更新步骤显示
+        function updateStep(step) {
+            // 隐藏所有部分
+            personalInfo.classList.add('hidden');
+            educationInfo.classList.add('hidden');
+            workInfo.classList.add('hidden');
+            
+            // 显示当前步骤
+            if (step === 1) {
+                personalInfo.classList.remove('hidden');
+                prevBtn.classList.add('hidden');
+                nextBtn.classList.remove('hidden');
+                submitBtn.classList.add('hidden');
+                progressBar.style.width = '33%';
+            } else if (step === 2) {
+                educationInfo.classList.remove('hidden');
+                prevBtn.classList.remove('hidden');
+                nextBtn.classList.remove('hidden');
+                submitBtn.classList.add('hidden');
+                progressBar.style.width = '66%';
+                eduIndicator.classList.remove('bg-gray-200', 'text-gray-500');
+                eduIndicator.classList.add('bg-primary', 'text-white');
+            } else if (step === 3) {
+                workInfo.classList.remove('hidden');
+                prevBtn.classList.remove('hidden');
+                nextBtn.classList.add('hidden');
+                submitBtn.classList.remove('hidden');
+                progressBar.style.width = '100%';
+                workIndicator.classList.remove('bg-gray-200', 'text-gray-500');
+                workIndicator.classList.add('bg-primary', 'text-white');
+            }
+            
+            currentStep = step;
+            // 滚动到顶部
+            window.scrollTo({ top: 0, behavior: 'smooth' });
+        }
+        
+        // 下一步按钮点击事件
+        nextBtn.addEventListener('click', () => {
+            if (validateStep(currentStep)) {
+                if (currentStep < totalSteps) {
+                    updateStep(currentStep + 1);
+                }
+            }
+        });
+        
+        // 上一步按钮点击事件
+        prevBtn.addEventListener('click', () => {
+            if (currentStep > 1) {
+                updateStep(currentStep - 1);
+            }
+        });
+        
+        // 表单提交事件
+        registrationForm.addEventListener('submit', (e) => {
+            e.preventDefault();
+            if (validateStep(3)) {
+                // 显示成功弹窗
+                successModal.classList.remove('hidden');
+                setTimeout(() => {
+                    modalContent.classList.remove('scale-95', 'opacity-0');
+                    modalContent.classList.add('scale-100', 'opacity-100');
+                }, 10);
+            }
+        });
+        
+        // 关闭弹窗
+        closeModal.addEventListener('click', () => {
+            modalContent.classList.remove('scale-100', 'opacity-100');
+            modalContent.classList.add('scale-95', 'opacity-0');
+            setTimeout(() => {
+                successModal.classList.add('hidden');
+                registrationForm.reset();
+                updateStep(1);
+                // 重置指示器样式
+                eduIndicator.classList.add('bg-gray-200', 'text-gray-500');
+                eduIndicator.classList.remove('bg-primary', 'text-white');
+                workIndicator.classList.add('bg-gray-200', 'text-gray-500');
+                workIndicator.classList.remove('bg-primary', 'text-white');
+            }, 300);
+        });
+        
+        // 切换密码可见性
+        togglePasswordBtns.forEach(btn => {
+            btn.addEventListener('click', () => {
+                const targetId = btn.getAttribute('data-target');
+                const input = document.getElementById(targetId);
+                const icon = btn.querySelector('i');
+                
+                if (input.type === 'password') {
+                    input.type = 'text';
+                    icon.classList.remove('fa-eye-slash');
+                    icon.classList.add('fa-eye');
+                } else {
+                    input.type = 'password';
+                    icon.classList.remove('fa-eye');
+                    icon.classList.add('fa-eye-slash');
+                }
+            });
+        });
+        
+        // 步骤验证
+        function validateStep(step) {
+            let isValid = true;
+            const errorMessages = document.querySelectorAll('.error-message');
+            
+            // 清除所有错误消息
+            errorMessages.forEach(el => {
+                el.classList.add('hidden');
+                const input = el.previousElementSibling || el.closest('div').querySelector('input, select');
+                if (input) {
+                    input.classList.remove('border-red-500');
+                    input.classList.add('border-gray-300');
+                }
+            });
+            
+            if (step === 1) {
+                // 验证姓名
+                const fullname = document.getElementById('fullname');
+                if (!fullname.value.trim()) {
+                    showError(fullname, '请输入您的真实姓名');
+                    isValid = false;
+                }
+                
+                // 验证密码
+                const password = document.getElementById('password');
+                if (password.value.length < 6) {
+                    showError(password, '密码至少需要6个字符');
+                    isValid = false;
+                }
+                
+                // 验证确认密码
+                const confirmPassword = document.getElementById('confirmPassword');
+                if (confirmPassword.value !== password.value) {
+                    showError(confirmPassword, '两次输入的密码不一致');
+                    isValid = false;
+                }
+                
+                // 验证协议
+                const agreement = document.getElementById('agreement');
+                if (!agreement.checked) {
+                    const errorEl = agreement.parentElement.nextElementSibling;
+                    errorEl.classList.remove('hidden');
+                    isValid = false;
+                }
+            } else if (step === 2) {
+                // 验证教育经历
+                const educationLevel = document.getElementById('educationLevel');
+                if (!educationLevel.value) {
+                    showError(educationLevel, '请选择最高学历');
+                    isValid = false;
+                }
+                
+                const schoolName = document.getElementById('schoolName');
+                if (!schoolName.value.trim()) {
+                    showError(schoolName, '请输入学校名称');
+                    isValid = false;
+                }
+                
+                const major = document.getElementById('major');
+                if (!major.value.trim()) {
+                    showError(major, '请输入所学专业');
+                    isValid = false;
+                }
+                
+                const startYear = document.getElementById('startYear');
+                const endYear = document.getElementById('endYear');
+                if (!startYear.value) {
+                    showError(startYear, '请选择开始年份');
+                    isValid = false;
+                }
+                if (!endYear.value) {
+                    showError(endYear, '请选择结束年份');
+                    isValid = false;
+                } else if (startYear.value && endYear.value && parseInt(startYear.value) >= parseInt(endYear.value)) {
+                    showError(endYear, '结束年份必须晚于开始年份');
+                    isValid = false;
+                }
+            }
+            
+            return isValid;
+        }
+        
+        // 显示错误消息
+        function showError(input, message) {
+            const errorEl = input.nextElementSibling?.classList.contains('error-message') 
+                ? input.nextElementSibling 
+                : input.parentElement.nextElementSibling;
+            
+            if (errorEl) {
+                errorEl.textContent = `\u{f06a} ${message}`; // Font Awesome 感叹号图标
+                errorEl.classList.remove('hidden');
+                input.classList.remove('border-gray-300');
+                input.classList.add('border-red-500');
+                
+                // 添加动画效果
+                errorEl.classList.add('animate-pulse');
+                setTimeout(() => {
+                    errorEl.classList.remove('animate-pulse');
+                }, 1000);
+            }
+        }
+        
+        // 输入框实时验证
+        const formInputs = registrationForm.querySelectorAll('input, select, textarea');
+        formInputs.forEach(input => {
+            input.addEventListener('blur', () => {
+                // 密码确认实时验证
+                if (input.id === 'confirmPassword') {
+                    const password = document.getElementById('password');
+                    if (input.value && input.value !== password.value) {
+                        showError(input, '两次输入的密码不一致');
+                    } else if (input.value) {
+                        hideError(input);
+                    }
+                } 
+                // 年份验证
+                else if (input.id === 'endYear') {
+                    const startYear = document.getElementById('startYear');
+                    if (startYear.value && input.value && parseInt(startYear.value) >= parseInt(input.value)) {
+                        showError(input, '结束年份必须晚于开始年份');
+                    } else if (input.value) {
+                        hideError(input);
+                    }
+                }
+                // 必填项验证
+                else if (input.required && !input.value.trim()) {
+                    const label = document.querySelector(`label[for="${input.id}"]`);
+                    const fieldName = label ? label.textContent.trim().replace(' *', '') : '此项';
+                    showError(input, `${fieldName}为必填项`);
+                } else if (input.value.trim()) {
+                    hideError(input);
+                }
+            });
+            
+            // 密码长度验证
+            if (input.id === 'password') {
+                input.addEventListener('input', () => {
+                    if (input.value.length >= 6) {
+                        hideError(input);
+                    }
+                });
+            }
+            
+            // 协议勾选验证
+            if (input.id === 'agreement') {
+                input.addEventListener('change', () => {
+                    if (input.checked) {
+                        const errorEl = input.parentElement.nextElementSibling;
+                        errorEl.classList.add('hidden');
+                    }
+                });
+            }
+        });
+        
+        // 隐藏错误消息
+        function hideError(input) {
+            const errorEl = input.nextElementSibling?.classList.contains('error-message') 
+                ? input.nextElementSibling 
+                : input.parentElement.nextElementSibling;
+            
+            if (errorEl) {
+                errorEl.classList.add('hidden');
+                input.classList.remove('border-red-500');
+                input.classList.add('border-gray-300');
+            }
+        }
+        
+        // 初始化页面
+        updateStep(1);
+    </script>
+</body>
+</html>
