@@ -1,0 +1,34 @@
+这是一个外部样式表，需要用link标签引入·
+
+选择器格式
+/* 选择器 { 
+    属性1: 值1;
+    属性2: 值2;
+     ... 更多样式属性 ...  }*/
+
+这是类选择器,需要在标签里用class属性调用
+.miku-color{
+    color: #39c5bb;
+    font-size: 39;
+}
+.tianyi-color{
+    color: #66ffcc;
+    font-size: 66;
+}
+这是标签选择器，专门对一个标签进行定制
+span{
+    color: purple;
+    font-size: larger;
+}
+div{
+    color: black;
+}
+这是id选择器，形式与类选择器类似，class换成了id,点换成了井号键，此外，在一个页面内id选择器只能用一次
+#yellow{
+    color: yellowgreen;
+}
+这是通配符选择器，星号，作用域整个页面所有标签
+*{
+    color: red;
+}
+

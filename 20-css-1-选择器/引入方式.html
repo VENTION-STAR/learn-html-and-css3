@@ -1,0 +1,44 @@
+1,内部样式表,在head标签内的title标签之后
+用style标签引入
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>内部样式表</title>
+    <style>
+        p{
+            color: aqua;
+            font-size: large;
+        }
+    </style>
+</head>
+<body>
+    <p>你好</p>
+</body>
+</html>
+2,内部样式表，在外部新建一个css后缀的文件，里面设置选择器，此时不需要用style标签，但要用link标签在html中引入它
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>外部选择器</title>
+    <link rel="stylesheet" href="D:\Code\htmlcss\20-css-1-选择器\外部样式表.css">
+</head>
+<body>
+    <p class="miku-color">nihaao</p>
+</body>
+</html>
+3，直接在标签内加入style属性，只对单独一个标签起作用
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>行内样式</title>
+</head>
+<body>
+    <p style="width: 39px; color: green; font-size: large;">你好好</p>
+</body>
+</html>
