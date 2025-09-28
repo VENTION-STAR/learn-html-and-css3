@@ -1,0 +1,72 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>后代选择器</title>
+    <style>
+        /* div里面的span是红色的 */
+        div span{
+            color: darksalmon;
+        }
+    </style>
+</head>
+<body>
+    <span style="color: rgb(40, 195, 40);">这个span没有父亲</span>
+    <div><span>这个span才有父亲</span></div>
+    <div><ul>
+        <li><span>这是div的重孙子，但颜色也一样，因为它也是div的后代</span></li>
+    </ul></div>
+</body>
+</html>
+
+
+
+
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>子代选择器</title>
+    <style>
+        div>span{
+            color: rgb(60, 123, 117);
+        }
+    </style>
+</head>
+<body>
+    <div>
+        <span>
+            这个<strong>子代选择器</strong>只能到div的儿子，其他都不行。（这是儿子）
+        </span>
+        <p>
+            <span>比如这个就不行（这是孙子）</span>
+        </p>
+    </div>
+
+</body>
+</html>
+
+
+
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>并集选择器</title>
+    <style>
+        p,
+        div,
+        span {
+            color: rgb(199, 199, 50);
+        }
+    </style>
+</head>
+<body>
+    <div>这就是并集选择器 div</div>
+    <p>这就是并集选择器 p</p>
+    <span>这就是并集选择器 sapn</span>
+</body>
+</html>
